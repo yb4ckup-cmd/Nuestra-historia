@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuestra Historia | Yeferson & Verónica ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    :root {
+      --bg-cream: #FFF7F5;
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --primary-rose: #C85262;
+      --deep-crimson: #8C2433;
+      --accent-gold: #D4AF37;
+      --soft-border: rgba(200, 82, 98, 0.15);
+      --text-dark: #3A2B2D;
+      --text-muted: #7A6366;
+      --shadow-glow: 0 12px 40px rgba(200, 82, 98, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: linear-gradient(180deg, #FFF5F2 0%, #FDEEE9 50%, #FFF7F5 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 12px 60px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .heart-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      color: rgba(200, 82, 98, 0.18);
+      animation: floatUp 12s linear infinite;
+      font-size: 1.2rem;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(105vh) scale(0.8) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.6; }
+      80% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 480px;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--soft-border);
+      border-radius: 24px;
+      padding: 26px 20px;
+      box-shadow: var(--shadow-glow);
+      text-align: center;
+      position: relative;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--deep-crimson);
+      margin-bottom: 8px;
+      line-height: 1.15;
+    }
+
+    .card-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+
+    .hero-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.6rem;
+      font-style: italic;
+      color: var(--deep-crimson);
+      margin-bottom: 4px;
+    }
+
+    .counter-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .counter-item {
+      background: rgba(200, 82, 98, 0.06);
+      border: 1px solid rgba(200, 82, 98, 0.12);
+      border-radius: 14px;
+      padding: 10px 4px;
+    }
+
+    .counter-val {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--primary-rose);
+      line-height: 1;
+    }
+
+    .counter-lbl {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .gallery-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 18px;
+      width: 100%;
+      height: 380px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      background-color: #fce4ec; /* Color de respaldo por si tarda en cargar la imagen */
+    }
+
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+      transform: scale(1.05);
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-nav {
+      position: absolute;
+      bottom: 12px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      z-index: 2;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      background: #FFF;
+      width: 24px;
+      border-radius: 10px;
+    }
+
+    .music-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .song-title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--deep-crimson);
+    }
+
+    .song-artist {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .yt-frame-container {
+      width: 100%;
+      height: 180px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 8px;
+      border: 1px solid var(--soft-border);
+    }
+
+    .quote-box {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--text-dark);
+      padding: 10px 14px;
+      border-left: 3px solid var(--primary-rose);
+      text-align: left;
+      background: rgba(200, 82, 98, 0.03);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .qualities-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+    }
+
+    .quality-item {
+      background: #FFF;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(200, 82, 98, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+    }
+
+    .quality-item::before {
+      content: "✨";
+      font-size: 1.1rem;
+    }
+
+    .bucket-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #FFF;
+      border-radius: 12px;
+      border: 1px solid rgba(200, 82, 98, 0.1);
+      margin-bottom: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .bucket-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 2px solid var(--primary-rose);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+
+    .bucket-item.checked .bucket-checkbox {
+      background: var(--primary-rose);
+    }
+
+    .bucket-item.checked .bucket-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .map-container {
+      width: 100%;
+      height: 220px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--soft-border);
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .vales-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .vale-btn {
+      background: linear-gradient(135deg, #FFF 0%, #FFF5F2 100%);
+      border: 1.5px dashed var(--primary-rose);
+      border-radius: 14px;
+      padding: 14px;
+      color: var(--deep-crimson);
+      font-weight: 600;
+      font-size: 0.92rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s;
+    }
+
+    .vale-btn.redeemed {
+      background: #F3ECEB;
+      border-color: #CCC;
+      color: #999;
+      text-decoration: line-through;
+      cursor: default;
+    }
+
+    .wheel-wrapper {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 10px auto;
+    }
+
+    #wheelCanvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .wheel-pointer {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 20px solid var(--deep-crimson);
+      z-index: 10;
+    }
+
+    .btn-spin {
+      background: var(--primary-rose);
+      color: #FFF;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(200, 82, 98, 0.3);
+    }
+
+    .final-question-card {
+      background: linear-gradient(135deg, #FFF 0%, #FFF0F2 100%);
+      border: 2px solid var(--primary-rose);
+    }
+
+    .btn-ask-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+      position: relative;
+      min-height: 50px;
+    }
+
+    .btn-yes {
+      background: var(--primary-rose);
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 24px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(200, 82, 98, 0.35);
+    }
+
+    .btn-no {
+      background: #EAE2E3;
+      color: var(--text-muted);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 24px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      position: absolute;
+      transition: all 0.15s ease-out;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="heart-bg" id="heartBg"></div>
+
+  <div class="wrapper">
+
+    <!-- Header & Nombres -->
+    <div class="card">
+      <div class="hero-names">Yeferson & Verónica</div>
+      <div class="card-subtitle">Nuestra Historia de Amor</div>
+      <p style="font-size: 0.9rem; color: var(--text-muted);">Construyendo recuerdos juntos desde el primer día.</p>
+    </div>
+
+    <!-- Contador de Tiempo -->
+    <div class="card">
+      <div class="card-title">Juntos Desde El</div>
+      <div class="card-subtitle">22 de Enero de 2026</div>
+      <div class="counter-grid">
+        <div class="counter-item">
+          <div class="counter-val" id="cntDays">0</div>
+          <div class="counter-lbl">Días</div>
+        </div>
+        <div class="counter-item">
+          <div class="counter-val" id="cntHours">0</div>
+          <div class="counter-lbl">Horas</div>
+        </div>
+        <div class="counter-item">
+          <div class="counter-val" id="cntMins">0</div>
+          <div class="counter-lbl">Min</div>
+        </div>
+        <div class="counter-item">
+          <div class="counter-val" id="cntSecs">0</div>
+          <div class="counter-lbl">Seg</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fotos Especiales (Carrusel) -->
+    <div class="card">
+      <div class="card-title">Momentos Especiales</div>
+      <div class="card-subtitle">Nuestros Recuerdos</div>
+      
+      <div class="gallery-container">
+        <!-- Foto 1 -->
+        <div class="slide active">
+          <img src="989c53b8-fe75-445d-a379-14369dca5653.jpg" id="img1" alt="Momento juntos 1" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=600&q=80'">
+        </div>
+        <!-- Foto 2 -->
+        <div class="slide">
+          <img src="13443176-e455-4250-9b53-f68688114a99.jpg" id="img2" alt="Momento juntos 2" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=600&q=80'">
+        </div>
+        <!-- Foto 3 -->
+        <div class="slide">
+          <img src="0262e72d-2923-402f-bbba-e27a3f6ad133.jpg" id="img3" alt="Momento juntos 3" onerror="this.src='https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80'">
+        </div>
+
+        <div class="gallery-nav" id="galleryDots">
+          <div class="dot active" onclick="setSlide(0)"></div>
+          <div class="dot" onclick="setSlide(1)"></div>
+          <div class="dot" onclick="setSlide(2)"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Música -->
+    <div class="card">
+      <div class="card-title">Nuestra Canción</div>
+      <div class="music-box">
+        <div class="song-title">Nuestra Canción Especial</div>
+        <div class="song-artist">Yeferson & Verónica</div>
+        <div class="yt-frame-container">
+          <iframe width="100%" height="100%" src="https://www.youtube.com/embed/iFlC7p-5fwk?enablejsapi=1" title="Nuestra Canción" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje -->
+    <div class="card">
+      <div class="card-title">Para Ti</div>
+      <div class="quote-box">
+        "Cada día a tu lado se vuelve un recuerdo que voy a guardar para siempre. Gracias por construir este tiempo nuestro conmigo, a nuestra manera."
+      </div>
+    </div>
+
+    <!-- Lo que más amo de ti -->
+    <div class="card">
+      <div class="card-title">Lo Que Más Amo De Ti</div>
+      <div class="qualities-list">
+        <div class="quality-item">El brillo en tus ojos cuando hablas de lo que amas</div>
+        <div class="quality-item">Tu valentía para seguir tus sueños</div>
+        <div class="quality-item">Tu sonrisa espectacular</div>
+        <div class="quality-item">Tu abrazo fuerte</div>
+      </div>
+    </div>
+
+    <!-- Cosas por hacer juntas -->
+    <div class="card">
+      <div class="card-title">Cosas Que Quiero Hacer Contigo</div>
+      <div id="bucketContainer">
+        <div class="bucket-item" onclick="toggleBucket(this)">
+          <div class="bucket-checkbox">✓</div>
+          <div class="bucket-text">Viajar juntos ✈️</div>
+        </div>
+        <div class="bucket-item" onclick="toggleBucket(this)">
+          <div class="bucket-checkbox">✓</div>
+          <div class="bucket-text">Ir a un concierto 🎵</div>
+        </div>
+        <div class="bucket-item" onclick="toggleBucket(this)">
+          <div class="bucket-checkbox">✓</div>
+          <div class="bucket-text">Cocinar juntos 🍝</div>
+        </div>
+        <div class="bucket-item" onclick="toggleBucket(this)">
+          <div class="bucket-checkbox">✓</div>
+          <div class="bucket-text">Ver el amanecer 🌅</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dónde empezó todo (Google Maps) -->
+    <div class="card">
+      <div class="card-title">Dónde Empezó Todo</div>
+      <div class="card-subtitle">Cartagena, Colombia</div>
+      <div class="map-container">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125405.3789524675!2d-75.58434771031388!3d10.391157642194602!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef62867f3f619b1%3A0xb5c086d4e4176465!2sCartagena%2C%20Bol%C3%ADvar%2C%20Colombia!5e0!3m2!1ses!2sco!4v1700000000000!5m2!1ses!2sco" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+
+    <!-- Vales de Amor -->
+    <div class="card">
+      <div class="card-title">Vales de Amor</div>
+      <div class="card-subtitle">Canjeables en cualquier momento</div>
+      <div class="vales-container">
+        <button class="vale-btn" onclick="redeemVale(this)">
+          <span>Vale por una cena romántica</span> 🍽️
+        </button>
+        <button class="vale-btn" onclick="redeemVale(this)">
+          <span>Vale por la película que elijas</span> 🎬
+        </button>
+        <button class="vale-btn" onclick="redeemVale(this)">
+          <span>Vale por un día solo nuestro</span> ☀️
+        </button>
+        <button class="vale-btn" onclick="redeemVale(this)">
+          <span>Vale por una noche sin teléfono</span> 📵
+        </button>
+        <button class="vale-btn" onclick="redeemVale(this)">
+          <span>Vale por un viaje sorpresa</span> 🧳
+        </button>
+      </div>
+    </div>
+
+    <!-- La Ruleta de Planes -->
+    <div class="card">
+      <div class="card-title">Ruleta de Planes</div>
+      <div class="card-subtitle">¿Qué hacemos hoy?</div>
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas" width="260" height="260"></canvas>
+      </div>
+      <button class="btn-spin" onclick="spinWheel()">Girar Ruleta 🎲</button>
+      <div id="wheelResult" style="margin-top: 12px; font-weight: 700; color: var(--primary-rose); min-height: 24px;"></div>
+    </div>
+
+    <!-- Pregunta Final -->
+    <div class="card final-question-card" id="finalCard">
+      <div class="card-title">La Pregunta Final</div>
+      <p style="font-size: 1.1rem; font-weight: 600; color: var(--deep-crimson); margin-top: 10px;">
+        ¿Quieres un futuro feliz a mi lado?
+      </p>
+      <div class="btn-ask-group">
+        <button class="btn-yes" onclick="answerYes()">¡Sí! ❤️</button>
+        <button class="btn-no" id="btnNo" onmouseover="dodgeNo()" onclick="dodgeNo()">No 😜</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- CORAZONES FLOTANTES DE FONDO ---
+    function initHearts() {
+      const container = document.getElementById('heartBg');
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerText = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDelay = (Math.random() * 10) + 's';
+        heart.style.fontSize = (0.8 + Math.random() * 1) + 'rem';
+        container.appendChild(heart);
+      }
+    }
+    initHearts();
+
+    // --- CONTADOR EN TIEMPO REAL ---
+    const startDate = new Date('2026-01-22T00:00:00');
+    function updateCounter() {
+      const now = new Date();
+      const diff = now - startDate;
+
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+
+        document.getElementById('cntDays').innerText = days;
+        document.getElementById('cntHours').innerText = hours;
+        document.getElementById('cntMins').innerText = mins;
+        document.getElementById('cntSecs').innerText = secs;
+      } else {
+        document.getElementById('cntDays').innerText = "0";
+        document.getElementById('cntHours').innerText = "0";
+        document.getElementById('cntMins').innerText = "0";
+        document.getElementById('cntSecs').innerText = "0";
+      }
+    }
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    // --- CARRUSEL DE FOTOS (MEJORADO Y PERMANENTE) ---
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    let slideInterval;
+
+    function setSlide(idx) {
+      if (!slides.length) return;
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      
+      currentSlide = (idx + slides.length) % slides.length;
+      
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    function startSlideShow() {
+      slideInterval = setInterval(() => {
+        setSlide(currentSlide + 1);
+      }, 4500);
+    }
+
+    // Iniciar bucle permanente del carrusel
+    startSlideShow();
+
+    // --- BUCKET LIST TOGGLE ---
+    function toggleBucket(el) {
+      el.classList.toggle('checked');
+    }
+
+    // --- REDIMIR VALES ---
+    function redeemVale(btn) {
+      if (!btn.classList.contains('redeemed')) {
+        btn.classList.add('redeemed');
+        confetti({
+          particleCount: 50,
+          spread: 60,
+          origin: { y: 0.7 }
+        });
+      }
+    }
+
+    // --- RULETA DE PLANES ---
+    const options = ["Cena Romántica", "Ir al Cine", "Helado Juntos", "Paseo de Noche", "Cocinar Juntos", "Película en Casa"];
+    const colors = ["#C85262", "#D4AF37", "#8C2433", "#E88D99", "#A63A4B", "#F2C4CE"];
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    let startAngle = 0;
+    const arc = Math.PI / (options.length / 2);
+    let spinTimeout = null;
+    let spinAngleStart = 10;
+    let spinTime = 0;
+    let spinTimeTotal = 0;
+
+    function drawWheel() {
+      ctx.clearRect(0,0,260,260);
+      for(let i = 0; i < options.length; i++) {
+        const angle = startAngle + i * arc;
+        ctx.fillStyle = colors[i];
+        ctx.beginPath();
+        ctx.arc(130, 130, 120, angle, angle + arc, false);
+        ctx.arc(130, 130, 0, angle + arc, angle, true);
+        ctx.fill();
+
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.font = "bold 11px Plus Jakarta Sans";
+        ctx.translate(130 + Math.cos(angle + arc / 2) * 80, 130 + Math.sin(angle + arc / 2) * 80);
+        ctx.rotate(angle + arc / 2 + Math.PI / 2);
+        const text = options[i];
+        ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+        ctx.restore();
+      }
+    }
+    drawWheel();
+
+    function rotateWheel() {
+      spinTime += 30;
+      if(spinTime >= spinTimeTotal) {
+        stopRotateWheel();
+        return;
+      }
+      const spinAngle = spinAngleStart - easeOut(spinTime, 0, spinAngleStart, spinTimeTotal);
+      startAngle += (spinAngle * Math.PI / 180);
+      drawWheel();
+      spinTimeout = setTimeout(rotateWheel, 30);
+    }
+
+    function stopRotateWheel() {
+      clearTimeout(spinTimeout);
+      const degrees = startAngle * 180 / Math.PI + 90;
+      const arcd = arc * 180 / Math.PI;
+      const index = Math.floor((360 - degrees % 360) / arcd);
+      const winner = options[(index + options.length) % options.length];
+      document.getElementById('wheelResult').innerText = "¡Ganó: " + winner + "! 🎉";
+      confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function easeOut(t, b, c, d) {
+      const ts = (t/=d)*t;
+      const tc = ts*t;
+      return b+c*(tc + -3*ts + 3*t);
+    }
+
+    function spinWheel() {
+      spinAngleStart = Math.random() * 10 + 10;
+      spinTime = 0;
+      spinTimeTotal = Math.random() * 3000 + 4000;
+      rotateWheel();
+    }
+
+    // --- PREGUNTA FINAL JUGUETONA ---
+    function dodgeNo() {
+      const btn = document.getElementById('btnNo');
+      const randomX = (Math.random() - 0.5) * 180;
+      const randomY = (Math.random() - 0.5) * 80;
+      btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    function answerYes() {
+      const card = document.getElementById('finalCard');
+      card.innerHTML = `
+        <div class="card-title">¡Sabía que dirías que sí! 🥰</div>
+        <p style="font-size: 1.1rem; color: var(--primary-rose); margin-top: 10px; font-weight: 600;">
+          Gracias por hacer cada día tan especial a tu lado. ❤️
+        </p>
+      `;
+      confetti({ particleCount: 150, spread: 100, origin: { y: 0.5 } });
+    }
+  </script>
+</body>
+</html>
